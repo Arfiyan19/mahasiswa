@@ -6,11 +6,11 @@
                 <h2 style="padding-bottom: 50px;">JURUSAN TEKNOLOGI INFORMASI-POLITEKNIK NEGERI MALANG</h2>
             </div>
             <div class="float-right my-2">
-                <a class="btn btn-success" href="{{ route('mahasiswas.create') }}"> Input Mahasiswa</a>
+                <a class="btn btn-success" href="{{ route('mahasiswas.create') }}"> Input mhs</a>
                 
             </div>
             <form action="{{ route('search') }}" method="GET">
-		<input type="text" name="search" placeholder="Cari Mahasiswa .." value="{{ old('search') }}">
+		<input type="text" name="search" placeholder="Cari mhs .." value="{{ old('search') }}">
 		<input type="submit" value="CARI">
 	</form>
         </div>
@@ -26,50 +26,40 @@
         <tr>
             <th>Nim</th>
             <th>Nama</th>
-            <th>Email</th>
-            <th>Tanggal_Lahir</th>
             <th>Kelas</th>
             <th>Jurusan</th>
-            <th>No_Handphone</th>
             <th width="280px">Action</th>
         </tr>
-        @foreach ($mahasiswas as $Mahasiswa)
+        @foreach ($paginate as $mhs)
         <tr>
             
-            <td>{{ $Mahasiswa->Nim }}</td>
-            <td>{{ $Mahasiswa->Nama }}</td>
-            <td>{{ $Mahasiswa->Email }}</td>
-            <td>{{ $Mahasiswa->Tanggal_Lahir }}</td>
-            <td>{{ $Mahasiswa->Kelas }}</td>
-            <td>{{ $Mahasiswa->Jurusan }}</td>
-            <td>{{ $Mahasiswa->No_Handphone }}</td>
+            <td>{{ $mhs->Nim }}</td>
+            <td>{{ $mhs->Nama }}</td>
+            <td>{{ $mhs->kelas->nama_kelas}}</td>
+            <td>{{ $mhs->Jurusan }}</td>
             <td>
-            <form action="{{ route('mahasiswas.destroy',$Mahasiswa->Nim) }}" method="POST">
+            <form action="{{ route('mahasiswas.destroy',$mhs->Nim) }}" method="POST">
    
-                    <a class="btn btn-info" href="{{ route('mahasiswas.show',$Mahasiswa->Nim) }}">Show</a>
+                    <a class="btn btn-info" href="{{ route('mahasiswas.show',$mhs->Nim) }}">Show</a>
 
-                    <a class="btn btn-primary" href="{{ route('mahasiswas.edit',$Mahasiswa->Nim) }}">Edit</a>
+                    <a class="btn btn-primary" href="{{ route('mahasiswas.edit',$mhs->Nim) }}">Edit</a>
 
                     @csrf
                     @method('DELETE')
 
                     <button type="submit" class="btn btn-danger">Delete</button>
             </form>
-            </td>
-        </tr>
-        
-        @endforeach
-    </table>
-	</style>
-
+            
+        </td>
+    </tr>
+    
+    @endforeach
+</table>
+</style>
 <footer>
-<br/>
-	Halaman : {{ $mahasiswas->currentPage() }} <br/>
-	Jumlah Data : {{ $mahasiswas->total() }} <br/>
-	Data Per Halaman : {{ $mahasiswas->perPage() }} <br/> <br/>
-
-
-	{{ $mahasiswas->links() }}
-    </footer>
+    <br/>
+    
+</footer>
+{{ $paginate->links() }}
 
     @endsection
