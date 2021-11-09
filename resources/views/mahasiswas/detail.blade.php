@@ -12,6 +12,7 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item"><b>Nim: </b>{{$Mahasiswa->Nim}}</li>
                     <li class="list-group-item"><b>Nama: </b>{{$Mahasiswa->Nama}}</li>
+                    <li class="list-group-item"><b>Foto</b> <img width="80px" src="{{asset('storage/'.$Mahasiswa->foto)}}"> </li>
                     <li class="list-group-item"><b>Kelas: </b>{{$Mahasiswa->kelas->nama_kelas}}</li>
                     <li class="list-group-item"><b>Jurusan: </b>{{$Mahasiswa->Jurusan}}</li>
                 </ul>

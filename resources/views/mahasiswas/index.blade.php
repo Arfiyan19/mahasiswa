@@ -26,6 +26,7 @@
         <tr>
             <th>Nim</th>
             <th>Nama</th>
+            <th>Foto</th>
             <th>Kelas</th>
             <th>Jurusan</th>
             <th width="280px">Action</th>
@@ -35,6 +36,7 @@
             
             <td>{{ $mhs->Nim }}</td>
             <td>{{ $mhs->Nama }}</td>
+            <td> <img width="80px" src="{{asset('storage/'.$mhs->foto)}}"> </td>
             <td>{{ $mhs->kelas->nama_kelas}}</td>
             <td>{{ $mhs->Jurusan }}</td>
             <td>
@@ -43,6 +45,7 @@
                     <a class="btn btn-info" href="{{ route('mahasiswas.show',$mhs->Nim) }}">Show</a>
 
                     <a class="btn btn-primary" href="{{ route('mahasiswas.edit',$mhs->Nim) }}">Edit</a>
+                    <a class="btn btn-danger" href="{{ route('mahasiswas.nilai',$mhs->Nim) }}">Nilai</a>
 
                     @csrf
                     @method('DELETE')

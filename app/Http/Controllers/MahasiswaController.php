@@ -6,7 +6,7 @@ use App\Models\Kelas;
 use Illuminate\Http\Request;
 use App\Models\Mahasiswa;
 use Illuminate\Support\Facades\DB;
-
+use PDF;
 class MahasiswaController extends Controller
 {
     /**
@@ -42,17 +42,15 @@ class MahasiswaController extends Controller
     public function store(Request $request)
     {
             //melakukan validasi data
-            $request->validate([
-                'Nim' => 'required',
-                'Nama' => 'required',
-                'Kelas' => 'required',
-                'Jurusan' => 'required',
-            ]);
             $mahasiswa = new Mahasiswa;
             $mahasiswa -> nim = $request-> get('Nim');
             $mahasiswa -> nama = $request-> get('Nama');
             $mahasiswa -> kelas_id = $request-> get('Kelas');
             $mahasiswa -> jurusan = $request-> get('Jurusan');
+            if($request->file('foto')){
+                $file = $request->file('foto')->store('images', 'public');
+                $mahasiswa->foto = $file;
+            }
             $mahasiswa->  save();
 
             //jika data berhasil ditambahkan, akan kembali ke halaman utama
@@ -73,6 +71,36 @@ class MahasiswaController extends Controller
         return view('mahasiswas.detail', ['Mahasiswa' =>$mahasiswa]);
 
     }
+    public function nilai($Nim)
+    {
+        $mahasiswa = Mahasiswa::with('kelas')->find($Nim);
+        // $mahasiswa_matakuliah = DB::table('mahasiswa_matakuliah')->where('name', 'John')->value('email');
+        // $mahasiswa_matakuliah = MahasiswaMataKuliah::with('mataKuliah')->where('mahasiswa_id', $id)->get();
+
+        $nilai = DB::table('nilai')
+            ->join('matakuliah', 'matakuliah.id', '=', 'nilai.matakuliah_id')
+            ->join('mahasiswa', 'mahasiswa.Nim', '=', 'nilai.mahasiswa_id')
+            ->select('nilai.*', 'matakuliah.*')
+            ->where('mahasiswa_id', $Nim)
+            ->get();
+        // @dd($nilai);
+        return view('mahasiswas.nilai', compact('mahasiswa', 'nilai'));
+
+    }
+    public function cetak_pdf($Nim)
+    {
+        $mahasiswa = Mahasiswa::with('kelas')->find($Nim);
+        $nilai = DB::table('nilai')
+            ->join('matakuliah', 'matakuliah.id', '=', 'nilai.matakuliah_id')
+            ->join('mahasiswa', 'mahasiswa.Nim', '=', 'nilai.mahasiswa_id')
+            ->select('nilai.*', 'matakuliah.*')
+            ->where('mahasiswa_id', $Nim)
+            ->get();
+
+            $pdf = PDF::loadview('mahasiswas.pdf', compact('mahasiswa','nilai'));
+        return $pdf->stream();
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -107,14 +135,16 @@ class MahasiswaController extends Controller
     $mahasiswa -> nim = $request-> get('Nim');
     $mahasiswa -> nama = $request-> get('Nama');
     $mahasiswa -> jurusan = $request-> get('Jurusan');
+    if($request->file('foto')){
+        $file = $request->file('foto')->store('images', 'public');
+        $mahasiswa->foto = $file;
+}
     $mahasiswa->  save();
 
     $kelas = new Kelas;
     $kelas ->id = $request ->get('Kelas');
     $mahasiswa -> kelas()->associate($kelas);
     $mahasiswa-> save();
-
-    
 
     //jika data berhasil ditambahkan, akan kembali ke halaman utama
     return redirect()->route('mahasiswas.index')

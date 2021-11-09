@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MahasiswaController;
+use App\Http\Controllers\ArticleController;
 use Illuminate\Http\Request; 
 
 /*
@@ -20,3 +21,8 @@ Route::get('/', function () {
 });
 Route::resource('mahasiswas', MahasiswaController::class);
 Route::get('/search', [MahasiswaController::class, 'search'])->name('search');
+Route::get('mahasiswas/nilai/{Nim}', [App\Http\Controllers\MahasiswaController::class, 'nilai'])->name('mahasiswas.nilai');
+Route::get('mahasiswas/cetak_pdf/{Nim}', [App\Http\Controllers\MahasiswaController::class, 'cetak_pdf'])->name('mahasiswas.cetak_pdf');
+
+Route::resource('articles', ArticleController::class);
+

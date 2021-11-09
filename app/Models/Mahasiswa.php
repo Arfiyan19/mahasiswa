@@ -23,9 +23,15 @@ class Mahasiswa extends Model
         'Nama',
         'kelas_id',
         'Jurusan',
+        'foto',
     ];
     public function kelas(){
         return $this->belongsTo(Kelas::class);
 
     }
+    public function nilai(){
+        return $this->belongsTo(Mahasiswa_MataKuliah::class);
+
+    }
+    
 }
